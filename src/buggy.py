@@ -5,6 +5,7 @@ class Buggy:
         self.direction = direction
 
     def move(self, command: str):
-        # Csak az 'f' parancsot kezeljük, és csak akkor, ha Észak felé nézünk
         if command == 'f' and self.direction == 'N':
             self.y -= 1
+        elif command == 'f' and self.direction == 'S':
+            self.y += 1

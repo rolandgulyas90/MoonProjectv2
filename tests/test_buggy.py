@@ -59,3 +59,14 @@ def test_buggy_moves_forward_when_facing_west():
     assert buggy.x == expected_x
     assert buggy.y == expected_y
     assert buggy.direction == 'W'
+
+def test_buggy_moves_backward_when_facing_north():
+    buggy = Buggy(x=5, y=5, direction='N')
+    expected_x = 5
+    expected_y = 6 # Hátra észak felől = Dél felé mozgás
+
+    buggy.move('b')
+
+    assert buggy.x == expected_x
+    assert buggy.y == expected_y
+    assert buggy.direction == 'N'

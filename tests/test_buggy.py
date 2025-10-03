@@ -80,3 +80,13 @@ def test_buggy_turns_left_from_north_to_west():
     assert buggy.x == 5  # A pozíció nem változik
     assert buggy.y == 5
     assert buggy.direction == 'W'  # Az iránynak 'W'-re kell változnia
+
+
+def test_buggy_turns_left_from_west_to_south():
+    buggy = Buggy(x=5, y=5, direction='W')
+
+    buggy.move('l')
+
+    assert buggy.x == 5
+    assert buggy.y == 5
+    assert buggy.direction == 'S'

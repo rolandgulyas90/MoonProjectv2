@@ -26,3 +26,5 @@ class Buggy:
         elif command == 'l':
             if self.direction == 'N':
                 self.direction = 'W'
+            elif self.direction == 'W':  # <-- EZT ADD HOZZÁ
+                self.direction = 'S'  # <-- ÉS EZT

@@ -11,11 +11,15 @@ class Buggy:
         }
 
     def move(self, command: str):
-        if command == 'f':
-            # Kikeresi a jelenlegi irányhoz tartozó vektort
-            vector = self._direction_vectors.get(self.direction)
+        vector = self._direction_vectors.get(self.direction)
+        if not vector:
+            return  # Ha ismeretlen az irány, ne csináljon semmit
 
-            if vector:
-                dx, dy = vector
-                self.x += dx
-                self.y += dy
+        dx, dy = vector
+
+        if command == 'f':
+            self.x += dx
+            self.y += dy
+        elif command == 'b':
+            self.x -= dx  # A vektor ellenkezőjét alkalmazzuk
+            self.y -= dy  # A vektor ellenkezőjét alkalmazzuk

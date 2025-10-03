@@ -70,3 +70,13 @@ def test_buggy_moves_backward_when_facing_north():
     assert buggy.x == expected_x
     assert buggy.y == expected_y
     assert buggy.direction == 'N'
+
+
+def test_buggy_turns_left_from_north_to_west():
+    buggy = Buggy(x=5, y=5, direction='N')
+
+    buggy.move('l')
+
+    assert buggy.x == 5  # A pozíció nem változik
+    assert buggy.y == 5
+    assert buggy.direction == 'W'  # Az iránynak 'W'-re kell változnia

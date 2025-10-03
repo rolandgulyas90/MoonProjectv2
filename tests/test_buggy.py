@@ -114,3 +114,45 @@ def test_buggy_turns_right_from_north_to_east():
     buggy.move('r')
 
     assert buggy.direction == 'E'
+
+
+def test_buggy_turns_right_from_east_to_south():
+    """
+    Tests if the buggy turns right correctly (E -> S).
+    """
+    # Arrange
+    buggy = Buggy(x=0, y=0, direction='E')
+
+    # Act
+    buggy.move('r')
+
+    # Assert
+    assert buggy.direction == 'S'
+
+
+def test_buggy_turns_right_from_south_to_west():
+    """
+    Tests if the buggy turns right correctly (S -> W).
+    """
+    # Arrange
+    buggy = Buggy(x=0, y=0, direction='S')
+
+    # Act
+    buggy.move('r')
+
+    # Assert
+    assert buggy.direction == 'W'
+
+
+def test_buggy_turns_right_from_west_to_north():
+    """
+    Tests if the buggy turns right correctly (W -> N).
+    """
+    # Arrange
+    buggy = Buggy(x=0, y=0, direction='W')
+
+    # Act
+    buggy.move('r')
+
+    # Assert
+    assert buggy.direction == 'N'

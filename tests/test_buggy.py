@@ -48,3 +48,14 @@ def test_buggy_moves_forward_when_facing_east():
     assert buggy.x == expected_x
     assert buggy.y == expected_y
     assert buggy.direction == 'E'
+
+def test_buggy_moves_forward_when_facing_west():
+    buggy = Buggy(x=5, y=5, direction='W')
+    expected_x = 4 # Nyugat felé haladva az X koordináta csökken
+    expected_y = 5
+
+    buggy.move('f')
+
+    assert buggy.x == expected_x
+    assert buggy.y == expected_y
+    assert buggy.direction == 'W'

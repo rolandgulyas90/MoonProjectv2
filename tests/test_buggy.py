@@ -90,3 +90,19 @@ def test_buggy_turns_left_from_west_to_south():
     assert buggy.x == 5
     assert buggy.y == 5
     assert buggy.direction == 'S'
+
+
+def test_buggy_turns_left_from_south_to_east():
+    buggy = Buggy(x=0, y=0, direction='S')
+
+    buggy.move('l')
+
+    assert buggy.direction == 'E'
+
+
+def test_buggy_turns_left_from_east_to_north():
+    buggy = Buggy(x=0, y=0, direction='E')
+
+    buggy.move('l')
+
+    assert buggy.direction == 'N'

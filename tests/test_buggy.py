@@ -106,3 +106,11 @@ def test_buggy_turns_left_from_east_to_north():
     buggy.move('l')
 
     assert buggy.direction == 'N'
+
+
+def test_buggy_turns_right_from_north_to_east():
+    buggy = Buggy(x=0, y=0, direction='N')
+
+    buggy.move('r')
+
+    assert buggy.direction == 'E'

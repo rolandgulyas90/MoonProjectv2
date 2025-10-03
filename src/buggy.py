@@ -23,3 +23,6 @@ class Buggy:
         elif command == 'b':
             self.x -= dx  # A vektor ellenkezőjét alkalmazzuk
             self.y -= dy  # A vektor ellenkezőjét alkalmazzuk
+        elif command == 'l':
+            if self.direction == 'N':
+                self.direction = 'W'

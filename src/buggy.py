@@ -1,18 +1,19 @@
+from src.planet import Planet
+
 class Buggy:
-    def __init__(self, x: int, y: int, direction: str):
+    def __init__(self, x: int, y: int, direction: str, planet: Planet):
         self.x = x
         self.y = y
         self.direction = direction
+        self.planet = planet
 
         self._direction_vectors = {
             'N': (0, -1), 'S': (0, 1), 'E': (1, 0), 'W': (-1, 0),
         }
 
-        # ÚJ: Szótár a balra forduláshoz
         self._left_turn_map = {
             'N': 'W', 'W': 'S', 'S': 'E', 'E': 'N',
         }
-        # ÚJ: Szótár a jobbra forduláshoz (ezt majd később használjuk)
         self._right_turn_map = {
             'N': 'E', 'E': 'S', 'S': 'W', 'W': 'N',
         }
@@ -23,13 +24,33 @@ class Buggy:
             if not vector: return
             dx, dy = vector
 
-            if command == 'f':
-                self.x += dx
-                self.y += dy
-            elif command == 'b':
-                self.x -= dx
-                self.y -= dy
+            # Kiszámoljuk az új pozíciót, mielőtt frissítenénk az objektumot
+            new_x = self.x
+            new_y = self.y
 
-        # ÁTÍRVA: A fordulás logikája mostantól egy szótárat használ
+            if command == 'f':
+                new_x += dx
+                new_y += dy
+            elif command == 'b':
+                new_x -= dx
+                new_y -= dy
+
+            # ÚJ: Gömb alakú pályaszélek kezelése
+            # Szélességi körök (Y)
+            if new_y < 0:
+                self.y = self.planet.latitudes - 1
+            else:
+                self.y = new_y
+
+            # Hosszúsági körök (X)
+            if new_x >= self.planet.longitudes:
+                self.x = 0
+            elif new_x < 0:
+                self.x = self.planet.longitudes - 1
+            else:
+                self.x = new_x
+
         elif command == 'l':
             self.direction = self._left_turn_map.get(self.direction, self.direction)
+        elif command == 'r':
+            self.direction = self._right_turn_map.get(self.direction, self.direction)

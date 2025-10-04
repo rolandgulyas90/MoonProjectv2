@@ -229,3 +229,21 @@ def test_buggy_wraps_around_the_south_pole():
     assert buggy.y == 0
     assert buggy.x == 5
     assert buggy.direction == 'S'
+
+def test_buggy_crosses_north_pole_on_a_sphere():
+    """
+    Teszteli, hogy a Buggy helyesen viselkedik-e az északi pólusnál
+    (átfordul a pálya másik végére, és megfordul az iránya).
+    """
+    planet = Planet(latitudes=10, longitudes=10)
+    # y=0 az északi szél
+    buggy = Buggy(x=5, y=0, direction='N', planet=planet)
+
+    buggy.move('f')
+
+    # Ellenőrzés
+    # A gömbmodellben a Buggy átlép a póluson, az x-koordináta megváltozik,
+    # az y-koordináta 0 marad, de az irány megfordul.
+    assert buggy.x == 5  # x-koordináta azonos marad ebben az egyszerűsített modellben
+    assert buggy.y == 0
+    assert buggy.direction == 'S'

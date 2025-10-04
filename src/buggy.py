@@ -29,20 +29,32 @@ class Buggy:
                 return
             dx, dy = vector
 
-            # Hátramozgásnál megfordítjuk a vektort
             if command == 'b':
                 dx, dy = -dx, -dy
 
-            # Egységesített mozgás és átfordulás
-            # A Python modulo operátora a negatív számokat is helyesen kezeli
-            # Például: -1 % 10 = 9
-            self.x = (self.x + dx) % self.planet.longitudes
-
-            # A Y koordinátát a gömbpalást miatt egyedi logikával kell kezelni
+            new_x = (self.x + dx) % self.planet.longitudes
             new_y = self.y + dy
-            if new_y >= self.planet.latitudes:
-                self.y = 0
-            elif new_y < 0:
-                self.y = self.planet.latitudes - 1
+
+            # ÚJ GÖMBMODELL LOGIKA
+            if new_y < 0:
+                # Északi pólus átlépése
+                self.y = 0  # Marad a 0-ás sorban
+                # Az irány 180 fokkal megfordul (N -> S, S -> N)
+                if self.direction == 'N':
+                    self.direction = 'S'
+                elif self.direction == 'S':
+                    self.direction = 'N'
+                # A hosszúsági (X) koordinátát is módosítanunk kell a gömbön,
+                # de a mostani tesztünk nem kéri. Ez a refaktor fázis feladata lehet.
+            elif new_y >= self.planet.latitudes:
+                # Déli pólus átlépése
+                self.y = self.planet.latitudes - 1  # Marad a szélen
+                if self.direction == 'S':
+                    self.direction = 'N'
+                elif self.direction == 'N':
+                    self.direction = 'S'
             else:
                 self.y = new_y
+
+            # A hosszúsági koordináta most is a moduló logikával működik
+            self.x = (self.x + dx) % self.planet.longitudes

@@ -19,40 +19,30 @@ class Buggy:
         }
 
     def move(self, command: str):
-        if command == 'f' or command == 'b':
-            vector = self._direction_vectors.get(self.direction)
-            if not vector: return
-            dx, dy = vector
-
-            # Kiszámoljuk az új pozíciót, mielőtt frissítenénk az objektumot
-            new_x = self.x
-            new_y = self.y
-
-            if command == 'f':
-                new_x += dx
-                new_y += dy
-            elif command == 'b':
-                new_x -= dx
-                new_y -= dy
-
-            # Gömb alakú pályaszélek kezelése (X és Y)
-            # Y (szélességi körök)
-            if new_y >= self.planet.latitudes:
-                self.y = 0  # Átvált az északi szélre (y=0)
-            elif new_y < 0:
-                self.y = self.planet.latitudes - 1  # Átvált a déli szélre
-            else:
-                self.y = new_y
-
-            # X (hosszúsági körök)
-            if new_x >= self.planet.longitudes:
-                self.x = 0
-            elif new_x < 0:
-                self.x = self.planet.longitudes - 1
-            else:
-                self.x = new_x
-
-        elif command == 'l':
+        if command == 'l':
             self.direction = self._left_turn_map.get(self.direction, self.direction)
         elif command == 'r':
             self.direction = self._right_turn_map.get(self.direction, self.direction)
+        elif command == 'f' or command == 'b':
+            vector = self._direction_vectors.get(self.direction)
+            if not vector:
+                return
+            dx, dy = vector
+
+            # Hátramozgásnál megfordítjuk a vektort
+            if command == 'b':
+                dx, dy = -dx, -dy
+
+            # Egységesített mozgás és átfordulás
+            # A Python modulo operátora a negatív számokat is helyesen kezeli
+            # Például: -1 % 10 = 9
+            self.x = (self.x + dx) % self.planet.longitudes
+
+            # A Y koordinátát a gömbpalást miatt egyedi logikával kell kezelni
+            new_y = self.y + dy
+            if new_y >= self.planet.latitudes:
+                self.y = 0
+            elif new_y < 0:
+                self.y = self.planet.latitudes - 1
+            else:
+                self.y = new_y

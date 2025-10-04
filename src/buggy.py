@@ -35,14 +35,16 @@ class Buggy:
                 new_x -= dx
                 new_y -= dy
 
-            # ÚJ: Gömb alakú pályaszélek kezelése
-            # Szélességi körök (Y)
-            if new_y < 0:
-                self.y = self.planet.latitudes - 1
+            # Gömb alakú pályaszélek kezelése (X és Y)
+            # Y (szélességi körök)
+            if new_y >= self.planet.latitudes:
+                self.y = 0  # Átvált az északi szélre (y=0)
+            elif new_y < 0:
+                self.y = self.planet.latitudes - 1  # Átvált a déli szélre
             else:
                 self.y = new_y
 
-            # Hosszúsági körök (X)
+            # X (hosszúsági körök)
             if new_x >= self.planet.longitudes:
                 self.x = 0
             elif new_x < 0:

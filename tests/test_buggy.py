@@ -1,5 +1,5 @@
 from src.buggy import Buggy
-
+from src.planet import Planet
 def test_buggy_initialization():
     start_x = 5
     start_y = 5
@@ -156,3 +156,13 @@ def test_buggy_turns_right_from_west_to_north():
 
     # Assert
     assert buggy.direction == 'N'
+
+def test_buggy_wraps_around_the_north_pole():
+    planet = Planet(latitudes=10, longitudes=10)
+    buggy = Buggy(x=5, y=0, direction='N', planet=planet)
+
+    # Act
+    buggy.move('f')
+
+    # Assert
+    assert buggy.y == 9

@@ -219,3 +219,13 @@ def test_buggy_wraps_around_the_north_pole():
     assert buggy.y == 9
     assert buggy.x == 5
     assert buggy.direction == 'N'
+
+def test_buggy_wraps_around_the_south_pole():
+    planet = Planet(latitudes=10, longitudes=10)
+    buggy = Buggy(x=5, y=9, direction='S', planet=planet) # Y=9 a déli szél
+
+    buggy.move('f') # Előre megy délre
+
+    assert buggy.y == 0
+    assert buggy.x == 5
+    assert buggy.direction == 'S'

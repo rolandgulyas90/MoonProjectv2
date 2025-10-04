@@ -8,7 +8,6 @@ def test_buggy_initialization():
     start_y = 5
     start_direction = 'N'
     planet = Planet(latitudes=10, longitudes=10)
-    # HIBA JAVÍTVA: Hozzáadva a planet paraméter
     buggy = Buggy(x=start_x, y=start_y, direction=start_direction, planet=planet)
 
     assert buggy.x == start_x
@@ -18,31 +17,26 @@ def test_buggy_initialization():
 
 
 def test_buggy_moves_forward_when_facing_north():
-    # Létrehozunk egy Buggy-t, ami észak felé néz
     planet = Planet(latitudes=10, longitudes=10)
     buggy = Buggy(x=5, y=5, direction='N', planet=planet)
     expected_x = 5
-    expected_y = 4  # Észak felé haladva az Y koordináta csökken
+    expected_y = 4
 
-    # Adunk neki egy 'f' (forward) parancsot
     buggy.move('f')
 
-    # Ellenőrizzük, hogy a pozíciója megváltozott-e a vártnak megfelelően
     assert buggy.x == expected_x
     assert buggy.y == expected_y
-    assert buggy.direction == 'N'  # Az iránynak nem szabad változnia
+    assert buggy.direction == 'N'
 
 
 def test_buggy_moves_forward_when_facing_south():
-    # Létrehozunk egy Buggy-t, ami dél felé néz
     planet = Planet(latitudes=10, longitudes=10)
     buggy = Buggy(x=5, y=5, direction='S', planet=planet)
     expected_x = 5
-    expected_y = 6  # Dél felé haladva az Y koordináta nő
+    expected_y = 6
 
     buggy.move('f')
 
-    # Ellenőrizzük, hogy a pozíciója megváltozott-e a vártnak megfelelően
     assert buggy.x == expected_x
     assert buggy.y == expected_y
     assert buggy.direction == 'S'
@@ -51,7 +45,7 @@ def test_buggy_moves_forward_when_facing_south():
 def test_buggy_moves_forward_when_facing_east():
     planet = Planet(latitudes=10, longitudes=10)
     buggy = Buggy(x=5, y=5, direction='E', planet=planet)
-    expected_x = 6  # Kelet felé haladva az X koordináta nő
+    expected_x = 6
     expected_y = 5
 
     buggy.move('f')
@@ -64,7 +58,7 @@ def test_buggy_moves_forward_when_facing_east():
 def test_buggy_moves_forward_when_facing_west():
     planet = Planet(latitudes=10, longitudes=10)
     buggy = Buggy(x=5, y=5, direction='W', planet=planet)
-    expected_x = 4  # Nyugat felé haladva az X koordináta csökken
+    expected_x = 4
     expected_y = 5
 
     buggy.move('f')
@@ -78,7 +72,7 @@ def test_buggy_moves_backward_when_facing_north():
     planet = Planet(latitudes=10, longitudes=10)
     buggy = Buggy(x=5, y=5, direction='N', planet=planet)
     expected_x = 5
-    expected_y = 6  # Hátra észak felől = Dél felé mozgás
+    expected_y = 6
 
     buggy.move('b')
 
@@ -94,7 +88,7 @@ def test_buggy_moves_backward_when_facing_south():
     buggy.move('b')
 
     assert buggy.x == 5
-    assert buggy.y == 4  # Y csökken hátrafelé délről
+    assert buggy.y == 4
     assert buggy.direction == 'S'
 
 
@@ -104,7 +98,7 @@ def test_buggy_moves_backward_when_facing_east():
 
     buggy.move('b')
 
-    assert buggy.x == 4  # X csökken hátrafelé keletről
+    assert buggy.x == 4
     assert buggy.y == 5
     assert buggy.direction == 'E'
 
@@ -115,7 +109,7 @@ def test_buggy_moves_backward_when_facing_west():
 
     buggy.move('b')
 
-    assert buggy.x == 6  # X nő hátrafelé nyugatról
+    assert buggy.x == 6
     assert buggy.y == 5
     assert buggy.direction == 'W'
 
@@ -126,10 +120,9 @@ def test_buggy_turns_left_from_north_to_west():
 
     buggy.move('l')
 
-    # HIBA JAVÍTVA: A pozíció nem változik forduláskor
     assert buggy.x == 5
     assert buggy.y == 5
-    assert buggy.direction == 'W'  # Az iránynak 'W'-re kell változnia
+    assert buggy.direction == 'W'
 
 
 def test_buggy_turns_left_from_west_to_south():
@@ -138,7 +131,6 @@ def test_buggy_turns_left_from_west_to_south():
 
     buggy.move('l')
 
-    # HIBA JAVÍTVA: A pozíció nem változik forduláskor
     assert buggy.x == 5
     assert buggy.y == 5
     assert buggy.direction == 'S'
@@ -209,41 +201,24 @@ def test_buggy_turns_right_from_west_to_north():
     assert buggy.y == 5
     assert buggy.direction == 'N'
 
-
+# FRISSÍTVE: A teszt a gömbmodellhez lett igazítva
 def test_buggy_wraps_around_the_north_pole():
     planet = Planet(latitudes=10, longitudes=10)
     buggy = Buggy(x=5, y=0, direction='N', planet=planet)
 
     buggy.move('f')
 
-    assert buggy.y == 9
-    assert buggy.x == 5
-    assert buggy.direction == 'N'
-
-def test_buggy_wraps_around_the_south_pole():
-    planet = Planet(latitudes=10, longitudes=10)
-    buggy = Buggy(x=5, y=9, direction='S', planet=planet) # Y=9 a déli szél
-
-    buggy.move('f') # Előre megy délre
-
     assert buggy.y == 0
     assert buggy.x == 5
     assert buggy.direction == 'S'
 
-def test_buggy_crosses_north_pole_on_a_sphere():
-    """
-    Teszteli, hogy a Buggy helyesen viselkedik-e az északi pólusnál
-    (átfordul a pálya másik végére, és megfordul az iránya).
-    """
+# FRISSÍTVE: A teszt a gömbmodellhez lett igazítva
+def test_buggy_wraps_around_the_south_pole():
     planet = Planet(latitudes=10, longitudes=10)
-    # y=0 az északi szél
-    buggy = Buggy(x=5, y=0, direction='N', planet=planet)
+    buggy = Buggy(x=5, y=9, direction='S', planet=planet)
 
     buggy.move('f')
 
-    # Ellenőrzés
-    # A gömbmodellben a Buggy átlép a póluson, az x-koordináta megváltozik,
-    # az y-koordináta 0 marad, de az irány megfordul.
-    assert buggy.x == 5  # x-koordináta azonos marad ebben az egyszerűsített modellben
-    assert buggy.y == 0
-    assert buggy.direction == 'S'
+    assert buggy.y == 9
+    assert buggy.x == 5
+    assert buggy.direction == 'N'

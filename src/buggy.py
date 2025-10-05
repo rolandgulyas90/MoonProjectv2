@@ -21,10 +21,10 @@ class Buggy:
     def move(self, command: str):
         if command == 'l':
             self.direction = self._left_turn_map.get(self.direction, self.direction)
-            return # A return ide is kell a konzisztencia miatt
+            return
         elif command == 'r':
             self.direction = self._right_turn_map.get(self.direction, self.direction)
-            return # és ide is
+            return
 
         if command == 'f' or command == 'b':
             vector = self._direction_vectors.get(self.direction)
@@ -41,13 +41,33 @@ class Buggy:
 
             # Kezeljük a sarkokat a teljes gömb-logika szerint
             if new_y < 0:  # Északi-sark átlépése
-                self.y = 0
+                final_y = 0
+                final_x = (self.x + self.planet.longitudes // 2) % self.planet.longitudes
+
+                if self.planet.has_obstacle(final_x, final_y):
+                    return  # Akadály van, nem mozgunk.
+
+                self.y = final_y
+                self.x = final_x
                 self.direction = 'S'
-                self.x = (self.x + self.planet.longitudes // 2) % self.planet.longitudes
+
             elif new_y >= self.planet.latitudes:  # Déli-sark átlépése
-                self.y = self.planet.latitudes - 1
+                final_y = self.planet.latitudes - 1
+                final_x = (self.x + self.planet.longitudes // 2) % self.planet.longitudes
+
+                if self.planet.has_obstacle(final_x, final_y):
+                    return  # Akadály van, nem mozgunk.
+
+                self.y = final_y
+                self.x = final_x
                 self.direction = 'N'
-                self.x = (self.x + self.planet.longitudes // 2) % self.planet.longitudes
+
             else:  # Normál mozgás a bolygó "palástján"
-                self.y = new_y
-                self.x = new_x % self.planet.longitudes
+                final_y = new_y
+                final_x = new_x % self.planet.longitudes
+
+                if self.planet.has_obstacle(final_x, final_y):
+                    return  # Akadály van, nem mozgunk.
+
+                self.y = final_y
+                self.x = final_x

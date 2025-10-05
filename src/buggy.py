@@ -19,67 +19,40 @@ class Buggy:
         }
 
     def move(self, command: str) -> bool | str:
-        """
-        Mozgatja a járművet vagy elfordítja.
-
-        Args:
-            command: A parancs ('f', 'b', 'l', 'r').
-
-        Returns:
-            True, ha a mozgás/fordulás sikeres volt.
-            "AKADÁLY", ha a mozgást akadály gátolta.
-        """
-        if command == 'l':
-            self.direction = self._left_turn_map.get(self.direction, self.direction)
-            return True
-        elif command == 'r':
-            self.direction = self._right_turn_map.get(self.direction, self.direction)
+        if command in ('l', 'r'):
+            if command == 'l':
+                self.direction = self._left_turn_map.get(self.direction, self.direction)
+            else:  # command == 'r'
+                self.direction = self._right_turn_map.get(self.direction, self.direction)
             return True
 
-        if command == 'f' or command == 'b':
-            vector = self._direction_vectors.get(self.direction)
-            if not vector:
-                return True  # Ismeretlen irány, de a művelet "kész"
-            dx, dy = vector
+        if command in ('f', 'b'):
+            # 1. Célkoordináták meghatározása (Calculate)
+            vector = self._direction_vectors.get(self.direction, (0, 0))
+            dx, dy = (-vector[0], -vector[1]) if command == 'b' else vector
 
-            if command == 'b':
-                dx, dy = -dx, -dy
+            potential_y = self.y + dy
 
-            # Kiszámoljuk a leendő pozíciót
-            new_x = self.x + dx
-            new_y = self.y + dy
+            final_x, final_y, final_dir = self.x, self.y, self.direction
 
-            # Kezeljük a sarkokat a teljes gömb-logika szerint
-            if new_y < 0:  # Északi-sark átlépése
+            if potential_y < 0:  # Északi-sark
                 final_y = 0
                 final_x = (self.x + self.planet.longitudes // 2) % self.planet.longitudes
-
-                if self.planet.has_obstacle(final_x, final_y):
-                    return "AKADÁLY"  # Riport: Akadály
-
-                self.y = final_y
-                self.x = final_x
-                self.direction = 'S'
-
-            elif new_y >= self.planet.latitudes:  # Déli-sark átlépése
+                final_dir = 'S'
+            elif potential_y >= self.planet.latitudes:  # Déli-sark
                 final_y = self.planet.latitudes - 1
                 final_x = (self.x + self.planet.longitudes // 2) % self.planet.longitudes
+                final_dir = 'N'
+            else:  # Normál mozgás
+                final_y = potential_y
+                final_x = (self.x + dx) % self.planet.longitudes
 
-                if self.planet.has_obstacle(final_x, final_y):
-                    return "AKADÁLY"  # Riport: Akadály
+            # 2. Ellenőrzés egyetlen helyen (Check)
+            if self.planet.has_obstacle(final_x, final_y):
+                return "AKADÁLY"
 
-                self.y = final_y
-                self.x = final_x
-                self.direction = 'N'
-
-            else:  # Normál mozgás a bolygó "palástján"
-                final_y = new_y
-                final_x = new_x % self.planet.longitudes
-
-                if self.planet.has_obstacle(final_x, final_y):
-                    return "AKADÁLY"  # Riport: Akadály
-
-                self.y = final_y
-                self.x = final_x
-
+            # 3. Végrehajtás (Commit)
+            self.x, self.y, self.direction = final_x, final_y, final_dir
             return True
+
+        return True  # Ismeretlen parancs esetén is sikeresnek vesszük

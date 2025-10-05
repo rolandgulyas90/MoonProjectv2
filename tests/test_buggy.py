@@ -201,24 +201,44 @@ def test_buggy_turns_right_from_west_to_north():
     assert buggy.y == 5
     assert buggy.direction == 'N'
 
-# FRISSÍTVE: A teszt a gömbmodellhez lett igazítva
-def test_buggy_wraps_around_the_north_pole():
+def test_buggy_crosses_north_pole_and_changes_longitude():
     planet = Planet(latitudes=10, longitudes=10)
-    buggy = Buggy(x=5, y=0, direction='N', planet=planet)
+    # Kezdőpozíció: x=3, y=0 (legészakibb sor), irány Észak
+    buggy = Buggy(x=3, y=0, direction='N', planet=planet)
 
+    # Előre mozgás a sarkon át
     buggy.move('f')
 
-    assert buggy.y == 0
-    assert buggy.x == 5
-    assert buggy.direction == 'S'
+    # Várt állapot:
+    # y marad 0 (a sarkon)
+    # az irány Délre vált
+    # x a bolygó túloldalára kerül: (3 + 10/2) % 10 = 8
+    expected_x = 8
+    expected_y = 0
+    expected_direction = 'S'
 
-# FRISSÍTVE: A teszt a gömbmodellhez lett igazítva
-def test_buggy_wraps_around_the_south_pole():
+    assert buggy.y == expected_y, f"Várt y: {expected_y}, kapott: {buggy.y}"
+    assert buggy.x == expected_x, f"Várt x: {expected_x}, kapott: {buggy.x}"
+    assert buggy.direction == expected_direction, f"Várt irány: {expected_direction}, kapott: {buggy.direction}"
+
+
+# FRISSÍTVE: A teszt a TELJES gömbmodellhez lett igazítva
+def test_buggy_crosses_south_pole_and_changes_longitude():
     planet = Planet(latitudes=10, longitudes=10)
-    buggy = Buggy(x=5, y=9, direction='S', planet=planet)
+    # Kezdőpozíció: x=8, y=9 (legdélibb sor), irány Dél
+    buggy = Buggy(x=8, y=9, direction='S', planet=planet)
 
+    # Előre mozgás a sarkon át
     buggy.move('f')
 
-    assert buggy.y == 9
-    assert buggy.x == 5
-    assert buggy.direction == 'N'
+    # Várt állapot:
+    # y marad 9 (a sarkon)
+    # az irány Északra vált
+    # x a bolygó túloldalára kerül: (8 + 10/2) % 10 = 13 % 10 = 3
+    expected_x = 3
+    expected_y = 9
+    expected_direction = 'N'
+
+    assert buggy.y == expected_y, f"Várt y: {expected_y}, kapott: {buggy.y}"
+    assert buggy.x == expected_x, f"Várt x: {expected_x}, kapott: {buggy.x}"
+    assert buggy.direction == expected_direction, f"Várt irány: {expected_direction}, kapott: {buggy.direction}"

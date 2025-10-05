@@ -242,3 +242,21 @@ def test_buggy_crosses_south_pole_and_changes_longitude():
     assert buggy.y == expected_y, f"Várt y: {expected_y}, kapott: {buggy.y}"
     assert buggy.x == expected_x, f"Várt x: {expected_x}, kapott: {buggy.x}"
     assert buggy.direction == expected_direction, f"Várt irány: {expected_direction}, kapott: {buggy.direction}"
+
+def test_buggy_stops_when_obstacle_is_in_front():
+    """Teszteli, hogy a jármű nem mozog előre, ha akadály van előtte."""
+    # 1. Arrange: Bolygó egy akadállyal (5,4)-en.
+    obstacle = (5, 4)
+    planet = Planet(latitudes=10, longitudes=10, obstacles=[obstacle])
+
+    # A jármű pont az akadály "mögött" van (5,5)-ön és Észak ('N') felé néz,
+    # tehát a következő lépése az akadályra vezetne.
+    start_x, start_y, start_dir = 5, 5, 'N'
+    buggy = Buggy(x=start_x, y=start_y, direction=start_dir, planet=planet)
+
+    buggy.move('f')
+
+    # 3. Assert: A jármű pozíciója és iránya nem változott.
+    assert buggy.x == start_x,
+    assert buggy.y == start_y,
+    assert buggy.direction == start_dir,

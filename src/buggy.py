@@ -18,18 +18,28 @@ class Buggy:
             'N': 'E', 'E': 'S', 'S': 'W', 'W': 'N',
         }
 
-    def move(self, command: str):
+    def move(self, command: str) -> bool | str:
+        """
+        Mozgatja a járművet vagy elfordítja.
+
+        Args:
+            command: A parancs ('f', 'b', 'l', 'r').
+
+        Returns:
+            True, ha a mozgás/fordulás sikeres volt.
+            "AKADÁLY", ha a mozgást akadály gátolta.
+        """
         if command == 'l':
             self.direction = self._left_turn_map.get(self.direction, self.direction)
-            return
+            return True
         elif command == 'r':
             self.direction = self._right_turn_map.get(self.direction, self.direction)
-            return
+            return True
 
         if command == 'f' or command == 'b':
             vector = self._direction_vectors.get(self.direction)
             if not vector:
-                return
+                return True  # Ismeretlen irány, de a művelet "kész"
             dx, dy = vector
 
             if command == 'b':
@@ -45,7 +55,7 @@ class Buggy:
                 final_x = (self.x + self.planet.longitudes // 2) % self.planet.longitudes
 
                 if self.planet.has_obstacle(final_x, final_y):
-                    return  # Akadály van, nem mozgunk.
+                    return "AKADÁLY"  # Riport: Akadály
 
                 self.y = final_y
                 self.x = final_x
@@ -56,7 +66,7 @@ class Buggy:
                 final_x = (self.x + self.planet.longitudes // 2) % self.planet.longitudes
 
                 if self.planet.has_obstacle(final_x, final_y):
-                    return  # Akadály van, nem mozgunk.
+                    return "AKADÁLY"  # Riport: Akadály
 
                 self.y = final_y
                 self.x = final_x
@@ -67,7 +77,9 @@ class Buggy:
                 final_x = new_x % self.planet.longitudes
 
                 if self.planet.has_obstacle(final_x, final_y):
-                    return  # Akadály van, nem mozgunk.
+                    return "AKADÁLY"  # Riport: Akadály
 
                 self.y = final_y
                 self.x = final_x
+
+            return True
